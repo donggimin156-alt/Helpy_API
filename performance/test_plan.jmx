@@ -32,7 +32,7 @@
         <collectionProp name="HeaderManager.headers">
           <elementProp name="" elementType="Header">
             <stringProp name="Header.name">Authorization</stringProp>
-            <stringProp name="Header.value">Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjg5Njg3ODQsIm5vbmNlIjoicnhTN1BGa04ybkFWaWQ3VCIsImlhdCI6MTc4MjM2NTkxNiwiaXNzIjoiZWxpY2UtYWNjb3VudC1hcGkiLCJzdWIiOiI1MTMyN2YwNy1jMDQ4LTdiNjItOGE0Yy1jNmI2MjFkYWM5MGEifQ.U_aZeWBxuAhCNgy49vprYjeyo3UnAGcvin0HONpOxb0</stringProp>
+            <stringProp name="Header.value">Bearer ${__P(API_TOKEN,)}</stringProp>
           </elementProp>
           <elementProp name="" elementType="Header">
             <stringProp name="Header.name">Content-Type</stringProp>
