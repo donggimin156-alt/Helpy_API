@@ -1,0 +1,29 @@
+# .gitignore
+
+# ── 환경 변수 (민감 정보) ────────────────────────────────────
+.env
+
+# ── Python 캐시 ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+
+# ── 테스트 결과물 ────────────────────────────────────────────
+allure-results/
+allure-report/
+jmeter_report/
+performance/html_report/
+performance/jmeter.log
+performance/result.jtl
+result.jtl
+
+# ── 가상환경 ─────────────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── IDE ──────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.iml
