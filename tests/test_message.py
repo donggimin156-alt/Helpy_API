@@ -58,7 +58,9 @@ def test_send_message_success(message_api, created_chatroom, created_model):
     chatroom_id = created_chatroom["id"]
     payload = {
         "model": created_model["id"],
-        "input": [{"role": "user", "content": "안녕하세요"}],
+        "input": [
+            {"role": "user", "content": [{"type": "text", "text": "안녕하세요"}]}
+        ],
     }
 
     with allure.step(f"POST /chatroom/{chatroom_id}/message/responses 요청 (LLM 호출)"):
