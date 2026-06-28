@@ -77,7 +77,7 @@ def test_activate_model_success(model_api, model_activation_api):
     allure.attach(response.text, "응답 본문", allure.attachment_type.TEXT)
 
     with allure.step("상태코드 확인"):
-        assert response.status_code in (200, 201)
+        assert response.status_code == 200  # 스펙: 200만 반환, 응답 본문 {}
 
     with allure.step("활성 목록에서 해당 모델 확인"):
         active_resp = model_api.list_models()
@@ -86,6 +86,22 @@ def test_activate_model_success(model_api, model_activation_api):
 
     # teardown: 원래 비활성 상태로 되돌림
     model_activation_api.deactivate_model(inactive_id)
+
+
+@allure.epic("Helpychat API")
+@allure.feature("Model Activation 관리")
+@allure.story("모델 활성화 - 존재하지 않는 모델")
+@pytest.mark.regression
+def test_activate_model_not_found(model_activation_api):
+    """존재하지 않는 model_id 로 POST /model_activation → 409 (model_not_found)."""
+    fake_id = "00000000-0000-0000-0000-000000000000"
+
+    with allure.step(f"존재하지 않는 ID 로 POST /model_activation: {fake_id}"):
+        response = model_activation_api.activate_model(fake_id)
+
+    allure.attach(response.text, "응답 본문", allure.attachment_type.TEXT)
+
+    assert response.status_code == 409  # 스펙 에러코드: model_not_found
 
 
 @allure.epic("Helpychat API")
@@ -142,7 +158,7 @@ def test_deactivate_model_success(model_api, model_activation_api):
     allure.attach(response.text, "응답 본문", allure.attachment_type.TEXT)
 
     with allure.step("상태코드 확인"):
-        assert response.status_code in (200, 204)
+        assert response.status_code == 200  # 스펙: 200만 반환, 응답 본문 {}
 
     with allure.step("활성 목록에서 해당 모델 제거 확인"):
         active_resp2 = model_api.list_models()
@@ -151,6 +167,24 @@ def test_deactivate_model_success(model_api, model_activation_api):
 
     # teardown: 원래 활성 상태로 되돌림
     model_activation_api.activate_model(target_id)
+
+
+@allure.epic("Helpychat API")
+@allure.feature("Model Activation 관리")
+@allure.story("모델 비활성화 - 존재하지 않는 모델")
+@pytest.mark.regression
+def test_deactivate_model_not_found(model_activation_api):
+    """존재하지 않는 model_id 로 DELETE /model_activation → 409 (model_not_found)."""
+    fake_id = "00000000-0000-0000-0000-000000000000"
+
+    with allure.step(f"존재하지 않는 ID 로 DELETE /model_activation: {fake_id}"):
+        response = model_activation_api.deactivate_model(fake_id)
+
+    allure.attach(response.text, "응답 본문", allure.attachment_type.TEXT)
+
+    assert (
+        response.status_code == 409
+    )  # 스펙 에러코드: model_not_found 또는 invalid_condition
 
 
 @allure.epic("Helpychat API")
