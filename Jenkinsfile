@@ -82,7 +82,7 @@ pipeline {
                           -e ENVIRONMENT=%ENVIRONMENT% ^
                           -v "%WORKSPACE%\\allure-results:/app/allure-results" ^
                           helpychat-api-test ^
-                          pytest -v -m "smoke and not destructive" --alluredir=allure-results
+                          pytest -v -m "not destructive" --alluredir=allure-results
                     '''
                 }
             }
@@ -104,13 +104,13 @@ pipeline {
                 ]) {
                     bat '''
                         docker run --rm ^
-                          -e API_TOKEN=%API_TOKEN% ^
                           -v "%WORKSPACE%\\performance:/performance" ^
                           -v "%WORKSPACE%\\jmeter_report:/jmeter_report" ^
                           justb4/jmeter ^
                           -n -t /performance/test_plan.jmx ^
                           -l /performance/result.jtl ^
-                          -e -o /jmeter_report
+                          -e -o /jmeter_report ^
+                          -JAPI_TOKEN=%API_TOKEN%
                     '''
                 }
             }
