@@ -82,7 +82,7 @@ pipeline {
                           -e ENVIRONMENT=%ENVIRONMENT% ^
                           -v "%WORKSPACE%\\allure-results:/app/allure-results" ^
                           helpychat-api-test ^
-                          pytest -v -m "not destructive" --alluredir=allure-results
+                          pytest -v --alluredir=allure-results
                     '''
                 }
             }
