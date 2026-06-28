@@ -44,16 +44,21 @@ def _no_auth_message_api():
 @allure.story("메시지 전송 - 성공")
 @pytest.mark.smoke
 @pytest.mark.destructive
-def test_send_message_success(message_api, created_chatroom):
+def test_send_message_success(message_api, created_chatroom, created_model):
     """
     POST /chatroom/{id}/message/response → 200 또는 201 + 응답 구조 검증.
 
     원칙 9: 응답 content 의 *값*은 검증하지 않는다. 구조(필드 존재)만 확인한다.
     LLM 응답 지연을 위해 MessageApi.send_message() 가 LLM_READ_TIMEOUT(60s) 을 적용한다.
+
+    API 스펙:
+      - model: 모델 ID (필수)
+      - input: [{"role": "user", "content": "..."}] 형태의 배열 (필수)
     """
     chatroom_id = created_chatroom["id"]
     payload = {
-        "input": ["안녕하세요"],
+        "model": created_model["id"],
+        "input": [{"role": "user", "content": "안녕하세요"}],
     }
 
     with allure.step(f"POST /chatroom/{chatroom_id}/message/responses 요청 (LLM 호출)"):

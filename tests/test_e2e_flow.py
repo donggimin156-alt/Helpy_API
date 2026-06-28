@@ -97,6 +97,7 @@ def test_full_user_scenario(model_api, chatroom_api, message_api, request):
 
     # ── 3단계: 메시지 전송 (LLM 호출) ────────────────────────────
     message_payload = {
+        "model": model_id,
         "input": [{"role": "user", "content": "안녕하세요, 테스트 메시지입니다."}],
     }
 
