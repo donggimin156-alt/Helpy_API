@@ -31,7 +31,7 @@ load_dotenv(
 # BASE_API_URL : REST API 서버 루트 (JSON 응답)
 # ACCOUNTS_URL : 인증 서버 루트 (토큰 발급 시 사용)
 
-BASE_API_URL = "https://dev-v2-community-api.dev.elicer.io"  # REST API 루트
+BASE_API_URL = "https://api-community.elice.io"  # REST API 루트 (운영 서버, smoke/GET 전용)
 ACCOUNTS_URL = "https://accounts.elice.io"  # 인증 서버 루트
 
 # ── 타임아웃 (초) ────────────────────────────────────────────────────
