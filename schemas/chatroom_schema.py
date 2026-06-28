@@ -34,8 +34,8 @@ class ChatroomResponse(BaseModel):
 class ChatroomListItem(BaseModel):
     """GET /chatroom 목록의 개별 항목 스키마."""
 
-    id: str  # TODO: 타입 확인
-    model_id: str  # TODO: 필드명 확인
+    id: str
+    model_id: Optional[str] = None  # 실제 응답에서 null 허용
     name: Optional[str] = None
 
     class Config:
