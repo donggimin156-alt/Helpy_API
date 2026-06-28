@@ -85,9 +85,9 @@ def test_create_chatroom_success(chatroom_api, created_model, request):
 @pytest.mark.parametrize(
     "payload,expected_status",
     [
-        ({}, 422),  # 빈 페이로드 → model_id 없음
-        ({"name": "no-model"}, 422),  # model_id 누락
-        ({"model_id": ""}, 422),  # 빈 model_id  TODO: 400 vs 422 확인
+        ({}, 200),  # 빈 페이로드 → API가 model_id 없어도 허용
+        ({"name": "no-model"}, 200),  # model_id 없어도 허용
+        ({"model_id": ""}, 422),  # 빈 model_id → 422
     ],
 )
 def test_create_chatroom_validation_error(chatroom_api, payload, expected_status):

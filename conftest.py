@@ -141,33 +141,19 @@ def message_api():
 @pytest.fixture
 def created_model(model_api):
     """
-    테스트용 모델을 생성하고 테스트 종료 후 삭제한다.
+    테스트에 사용할 모델을 반환한다. (기존 모델 목록에서 첫 번째 조회)
 
-    [1차 Selenium 대응]
-      1차: 테스트마다 UI 에서 모델 생성 폼을 열고 직접 입력.
-      2차: POST /model 한 줄로 대체, teardown 도 DELETE 한 줄.
-
-    Yields
-    ------
-    dict
-        생성된 모델의 응답 본문(JSON).
-        예) {"id": "...", "name": "test-model-<uuid>", ...}
+    POST /model 에 key/endpoint 필수 필드가 있으나 값을 알 수 없으므로
+    GET /model 목록에서 첫 번째 기존 모델을 사용한다.
+    생성하지 않으므로 teardown 삭제 없음.
     """
-    payload = {
-        "name": f"test-model-{uuid.uuid4()}",
-        # TODO: 실제 API로 필수 필드 확인 필요 (instructions 등)
-    }
-    response = model_api.create_model(payload)
-    assert response.status_code in (200, 201), (
-        f"[fixture] 모델 생성 실패: {response.status_code} {response.text}"
+    response = model_api.list_models()
+    assert response.status_code == 200, (
+        f"[fixture] 모델 목록 조회 실패: {response.status_code}"
     )
-    model = response.json()
-    yield model
-
-    # teardown: 404(이미 삭제됨) 포함 모든 응답을 조용히 무시
-    model_id = model.get("id")
-    if model_id:
-        model_api.delete_model(model_id)
+    models = response.json()
+    assert len(models) > 0, "[fixture] 사용 가능한 모델이 없습니다"
+    return models[0]
 
 
 @pytest.fixture
