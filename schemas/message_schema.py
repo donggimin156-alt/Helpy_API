@@ -12,18 +12,21 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
 
 
 class MessageListItem(BaseModel):
-    """GET /chatroom/{id}/message 목록의 개별 항목 스키마 (스펙 미확인)."""
+    """GET /chatroom/{id}/message 목록의 개별 항목 스키마."""
 
     id: str
-    chatroom_id: Optional[str] = None
-    role: Optional[str] = None
-    content: Optional[str] = None
+    role: Optional[str] = None  # "user" | "assistant"
+    content: Optional[str] = None  # 저장된 메시지 텍스트
+    content_raw: Optional[list] = None
+    raw: Optional[list] = None
+    created: Optional[datetime] = None
 
     class Config:
         extra = "ignore"

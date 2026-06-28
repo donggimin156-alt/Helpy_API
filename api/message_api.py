@@ -54,7 +54,10 @@ class MessageApi(BaseClient):
             timeout=(CONNECT_TIMEOUT, LLM_READ_TIMEOUT),
         )
 
-    def get_messages(self, chatroom_id: str):
-        """GET /chatroom/{chatroom_id}/message — 챗방 메시지 목록 조회."""
+    def get_messages(self, chatroom_id: str, count: int = 20):
+        """GET /chatroom/{chatroom_id}/message — 챗방 메시지 목록 조회.
+
+        count 는 필수 파라미터 (스펙: 1~50).
+        """
         path = _MSG_LIST_PATH.format(chatroom_id=chatroom_id)
-        return self.get(path)
+        return self.get(path, params={"count": count})
