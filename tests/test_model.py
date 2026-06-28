@@ -24,7 +24,7 @@ import uuid
 import allure
 import pytest
 
-from schemas.model_schema import ModelListResponse, ModelResponse
+from schemas.model_schema import ModelListItem, ModelResponse
 
 # ── 헬퍼: 인증 없는 클라이언트 생성 ────────────────────────────────
 #
@@ -154,10 +154,7 @@ def test_list_models_success(model_api):
 
     with allure.step("응답 스키마 검증"):
         body = response.json()
-        # TODO: 단순 배열([...]) 이면 아래 두 줄로 교체
-        # from schemas.model_schema import ModelListItem
-        # [ModelListItem(**item) for item in body]
-        ModelListResponse(**body)
+        [ModelListItem(**item) for item in body]
 
 
 @allure.epic("Helpychat API")

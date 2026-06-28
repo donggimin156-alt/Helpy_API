@@ -22,7 +22,7 @@ import uuid
 import allure
 import pytest
 
-from schemas.chatroom_schema import ChatroomListResponse, ChatroomResponse
+from schemas.chatroom_schema import ChatroomListItem, ChatroomResponse
 
 
 def _no_auth_chatroom_api():
@@ -140,8 +140,7 @@ def test_list_chatrooms_success(chatroom_api):
 
     with allure.step("응답 스키마 검증"):
         body = response.json()
-        # TODO: 단순 배열([...])이면 ChatroomListItem 으로 교체
-        ChatroomListResponse(**body)
+        [ChatroomListItem(**item) for item in body]
 
 
 # ════════════════════════════════════════════════════════════
