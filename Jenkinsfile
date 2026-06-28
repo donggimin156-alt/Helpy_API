@@ -30,6 +30,10 @@
 pipeline {
     agent any
 
+    triggers {
+        pollSCM('H/5 * * * *')  // 5분마다 GitHub 변경 확인 → 변경 있으면 자동 빌드
+    }
+
     options {
         disableConcurrentBuilds()   // 동시 빌드 방지 — 성능 테스트 부하 충돌 예방
         timestamps()                // 각 로그 줄에 타임스탬프 출력
