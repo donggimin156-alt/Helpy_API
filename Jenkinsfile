@@ -32,6 +32,7 @@ pipeline {
 
     options {
         disableConcurrentBuilds()   // 동시 빌드 방지 — 성능 테스트 부하 충돌 예방
+        timestamps()                // 각 로그 줄에 타임스탬프 출력
         timeout(time: 30, unit: 'MINUTES')  // 전체 파이프라인 타임아웃
     }
 
