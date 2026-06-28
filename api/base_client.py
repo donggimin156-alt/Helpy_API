@@ -102,6 +102,9 @@ class BaseClient:
             로그인 API 에서 받은 액세스 토큰 문자열.
         """
         self.session.headers["Authorization"] = f"Bearer {token}"
+        # dev 서버 ACL은 브라우저 쿠키 세션(eliceSessionKey)을 함께 검증한다.
+        # Bearer 토큰만으로는 no_account_api_session 오류 발생 → 쿠키도 병행 주입
+        self.session.cookies.set("eliceSessionKey", token)
         logger.debug("Authorization 토큰 주입 완료")
 
     def clear_token(self):
@@ -112,7 +115,8 @@ class BaseClient:
             Selenium 에서는 driver.delete_all_cookies() 로 로그아웃 상태를 만들었다.
             API 에서는 헤더에서 Authorization 키를 제거하면 동일한 효과.
         """
-        self.session.headers.pop("Authorization", None)  # 없으면 KeyError 없이 무시
+        self.session.headers.pop("Authorization", None)
+        self.session.cookies.clear()
         logger.debug("Authorization 토큰 제거 완료")
 
     # ── 내부 공통 요청 메서드 ──────────────────────────────────────
