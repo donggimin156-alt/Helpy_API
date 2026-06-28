@@ -187,6 +187,7 @@ def test_list_models_unauthorized():
 @allure.feature("Model 관리")
 @allure.story("모델 단건 조회 - 성공")
 @pytest.mark.smoke
+@pytest.mark.destructive
 def test_get_model_success(model_api, created_model):
     """GET /model/{id} → 200 + 스키마 검증 + id 일치 확인."""
     model_id = created_model["id"]

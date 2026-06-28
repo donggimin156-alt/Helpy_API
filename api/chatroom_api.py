@@ -40,7 +40,7 @@ class ChatroomApi(BaseClient):
 
     def list_chatrooms(self):
         """GET /chatroom — 챗방 목록 조회."""
-        return self.get(_PATH)
+        return self.get(_PATH, params={"count": 20})
 
     def get_chatroom(self, chatroom_id: str):
         """GET /chatroom/{chatroom_id} — 챗방 단건 조회."""

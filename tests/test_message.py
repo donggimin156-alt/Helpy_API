@@ -125,6 +125,7 @@ def test_send_message_unauthorized(created_chatroom):
 @allure.feature("Message 관리")
 @allure.story("메시지 목록 조회 - 성공")
 @pytest.mark.smoke
+@pytest.mark.destructive
 def test_get_messages_success(message_api, created_chatroom):
     """
     GET /chatroom/{id}/message → 200 + 목록 스키마 검증.

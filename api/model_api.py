@@ -43,7 +43,9 @@ class ModelApi(BaseClient):
 
     def list_models(self):
         """GET /model — 모델 목록 조회."""
-        return self.get(_PATH)
+        return self.get(
+            _PATH, params={"filter_is_active": "true", "skip": 0, "count": 40}
+        )
 
     def get_model(self, model_id: str):
         """GET /model/{model_id} — 모델 단건 조회."""

@@ -153,6 +153,7 @@ def test_list_chatrooms_success(chatroom_api):
 @allure.feature("Chatroom 관리")
 @allure.story("챗방 단건 조회 - 성공")
 @pytest.mark.smoke
+@pytest.mark.destructive
 def test_get_chatroom_success(chatroom_api, created_chatroom):
     """GET /chatroom/{id} → 200 + 스키마 검증 + id 일치 확인."""
     chatroom_id = created_chatroom["id"]
