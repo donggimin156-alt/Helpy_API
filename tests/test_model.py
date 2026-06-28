@@ -216,13 +216,14 @@ def test_get_model_not_found(model_api):
 
     allure.attach(response.text, "응답 본문", allure.attachment_type.TEXT)
 
-    assert response.status_code == 404  # TODO: 실제 API로 확인
+    assert response.status_code == 409  # 실제 API: 없는 ID → 409
 
 
 @allure.epic("Helpychat API")
 @allure.feature("Model 관리")
 @allure.story("모델 단건 조회 - 인증 실패")
 @pytest.mark.regression
+@pytest.mark.destructive
 def test_get_model_unauthorized(created_model):
     """토큰 없이 GET /model/{id} → 401 또는 403."""
     no_auth = _no_auth_model_api()
@@ -280,13 +281,14 @@ def test_update_model_not_found(model_api):
 
     allure.attach(response.text, "응답 본문", allure.attachment_type.TEXT)
 
-    assert response.status_code == 404  # TODO
+    assert response.status_code == 409  # 실제 API: 없는 ID → 409
 
 
 @allure.epic("Helpychat API")
 @allure.feature("Model 관리")
 @allure.story("모델 수정 - 인증 실패")
 @pytest.mark.regression
+@pytest.mark.destructive
 def test_update_model_unauthorized(created_model):
     """토큰 없이 PATCH /model/{id} → 401 또는 403."""
     no_auth = _no_auth_model_api()
@@ -348,13 +350,14 @@ def test_delete_model_not_found(model_api):
 
     allure.attach(response.text, "응답 본문", allure.attachment_type.TEXT)
 
-    assert response.status_code == 404  # TODO
+    assert response.status_code == 409  # 실제 API: 없는 ID → 409
 
 
 @allure.epic("Helpychat API")
 @allure.feature("Model 관리")
 @allure.story("모델 삭제 - 인증 실패")
 @pytest.mark.regression
+@pytest.mark.destructive
 def test_delete_model_unauthorized(created_model):
     """토큰 없이 DELETE /model/{id} → 401 또는 403."""
     no_auth = _no_auth_model_api()

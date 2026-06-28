@@ -75,6 +75,7 @@ def test_send_message_success(message_api, created_chatroom):
 @allure.feature("Message 관리")
 @allure.story("메시지 전송 - 검증 실패")
 @pytest.mark.regression
+@pytest.mark.destructive
 @pytest.mark.parametrize(
     "payload,expected_status",
     [
@@ -101,6 +102,7 @@ def test_send_message_validation_error(
 @allure.feature("Message 관리")
 @allure.story("메시지 전송 - 인증 실패")
 @pytest.mark.regression
+@pytest.mark.destructive
 def test_send_message_unauthorized(created_chatroom):
     """토큰 없이 POST /chatroom/{id}/message/response → 401 또는 403."""
     no_auth = _no_auth_message_api()

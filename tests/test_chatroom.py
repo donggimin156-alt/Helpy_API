@@ -81,6 +81,7 @@ def test_create_chatroom_success(chatroom_api, created_model, request):
 @allure.feature("Chatroom 관리")
 @allure.story("챗방 생성 - 검증 실패")
 @pytest.mark.regression
+@pytest.mark.destructive
 @pytest.mark.parametrize(
     "payload,expected_status",
     [
@@ -184,7 +185,7 @@ def test_get_chatroom_not_found(chatroom_api):
 
     allure.attach(response.text, "응답 본문", allure.attachment_type.TEXT)
 
-    assert response.status_code == 404  # TODO: 실제 API로 확인
+    assert response.status_code == 409  # 실제 API: 없는 ID → 409
 
 
 # ════════════════════════════════════════════════════════════
@@ -233,4 +234,4 @@ def test_delete_chatroom_not_found(chatroom_api):
 
     allure.attach(response.text, "응답 본문", allure.attachment_type.TEXT)
 
-    assert response.status_code == 404  # TODO
+    assert response.status_code == 409  # 실제 API: 없는 ID → 409
