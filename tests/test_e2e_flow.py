@@ -114,9 +114,7 @@ def test_full_user_scenario(model_api, chatroom_api, message_api, request):
 
     allure.attach(list_resp.text, "메시지 목록 응답 본문", allure.attachment_type.TEXT)
 
-    assert list_resp.status_code == 200, (
-        f"메시지 조회 실패: {list_resp.status_code}"
-    )
+    assert list_resp.status_code == 200, f"메시지 조회 실패: {list_resp.status_code}"
 
     # 원칙 9: 목록의 내용(각 메시지 텍스트)은 검증하지 않는다
     # 응답이 파싱 가능한 JSON 인지만 확인

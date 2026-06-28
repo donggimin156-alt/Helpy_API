@@ -29,12 +29,14 @@ def _no_auth_chatroom_api():
     """토큰을 주입하지 않은 ChatroomApi 인스턴스를 반환한다."""
     from api.chatroom_api import ChatroomApi
     from config.settings import BASE_API_URL
+
     return ChatroomApi(BASE_API_URL)
 
 
 # ════════════════════════════════════════════════════════════
 # CREATE — POST /chatroom
 # ════════════════════════════════════════════════════════════
+
 
 @allure.epic("Helpychat API")
 @allure.feature("Chatroom 관리")
@@ -79,11 +81,14 @@ def test_create_chatroom_success(chatroom_api, created_model, request):
 @allure.feature("Chatroom 관리")
 @allure.story("챗방 생성 - 검증 실패")
 @pytest.mark.regression
-@pytest.mark.parametrize("payload,expected_status", [
-    ({}, 422),                             # 빈 페이로드 → model_id 없음
-    ({"name": "no-model"}, 422),           # model_id 누락
-    ({"model_id": ""}, 422),               # 빈 model_id  TODO: 400 vs 422 확인
-])
+@pytest.mark.parametrize(
+    "payload,expected_status",
+    [
+        ({}, 422),  # 빈 페이로드 → model_id 없음
+        ({"name": "no-model"}, 422),  # model_id 누락
+        ({"model_id": ""}, 422),  # 빈 model_id  TODO: 400 vs 422 확인
+    ],
+)
 def test_create_chatroom_validation_error(chatroom_api, payload, expected_status):
     """필수 필드(model_id) 누락 → 422."""
     with allure.step(f"잘못된 payload 로 POST /chatroom: {payload}"):
@@ -118,6 +123,7 @@ def test_create_chatroom_unauthorized():
 # LIST — GET /chatroom
 # ════════════════════════════════════════════════════════════
 
+
 @allure.epic("Helpychat API")
 @allure.feature("Chatroom 관리")
 @allure.story("챗방 목록 조회 - 성공")
@@ -141,6 +147,7 @@ def test_list_chatrooms_success(chatroom_api):
 # ════════════════════════════════════════════════════════════
 # GET single — GET /chatroom/{id}
 # ════════════════════════════════════════════════════════════
+
 
 @allure.epic("Helpychat API")
 @allure.feature("Chatroom 관리")
@@ -183,6 +190,7 @@ def test_get_chatroom_not_found(chatroom_api):
 # ════════════════════════════════════════════════════════════
 # DELETE — DELETE /chatroom/{id}
 # ════════════════════════════════════════════════════════════
+
 
 @allure.epic("Helpychat API")
 @allure.feature("Chatroom 관리")

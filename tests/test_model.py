@@ -26,22 +26,24 @@ import pytest
 
 from schemas.model_schema import ModelListResponse, ModelResponse
 
-
 # ── 헬퍼: 인증 없는 클라이언트 생성 ────────────────────────────────
 #
 # 인증 실패 테스트에서 공통으로 사용한다.
 # fixture 로 빼지 않고 테스트 내부에서 직접 생성해 각 테스트를 독립적으로 유지.
 
+
 def _no_auth_model_api():
     """토큰을 주입하지 않은 ModelApi 인스턴스를 반환한다."""
     from api.model_api import ModelApi
     from config.settings import BASE_API_URL
+
     return ModelApi(BASE_API_URL)
 
 
 # ════════════════════════════════════════════════════════════
 # CREATE — POST /model
 # ════════════════════════════════════════════════════════════
+
 
 @allure.epic("Helpychat API")
 @allure.feature("Model 관리")
@@ -88,11 +90,14 @@ def test_create_model_success(model_api, request):
 @allure.feature("Model 관리")
 @allure.story("모델 생성 - 검증 실패")
 @pytest.mark.regression
-@pytest.mark.parametrize("payload,expected_status", [
-    ({}, 422),                        # 빈 페이로드 → 필수 필드 없음
-    ({"name": ""}, 422),              # 빈 문자열 name  TODO: 400 vs 422 확인
-    ({"wrong_field": "value"}, 422),  # 잘못된 필드명 → 필수 필드 누락
-])
+@pytest.mark.parametrize(
+    "payload,expected_status",
+    [
+        ({}, 422),  # 빈 페이로드 → 필수 필드 없음
+        ({"name": ""}, 422),  # 빈 문자열 name  TODO: 400 vs 422 확인
+        ({"wrong_field": "value"}, 422),  # 잘못된 필드명 → 필수 필드 누락
+    ],
+)
 def test_create_model_validation_error(model_api, payload, expected_status):
     """
     필수 필드 누락·잘못된 입력으로 POST /model → 422.
@@ -131,6 +136,7 @@ def test_create_model_unauthorized():
 # ════════════════════════════════════════════════════════════
 # LIST — GET /model
 # ════════════════════════════════════════════════════════════
+
 
 @allure.epic("Helpychat API")
 @allure.feature("Model 관리")
@@ -175,6 +181,7 @@ def test_list_models_unauthorized():
 # ════════════════════════════════════════════════════════════
 # GET single — GET /model/{id}
 # ════════════════════════════════════════════════════════════
+
 
 @allure.epic("Helpychat API")
 @allure.feature("Model 관리")
@@ -235,6 +242,7 @@ def test_get_model_unauthorized(created_model):
 # ════════════════════════════════════════════════════════════
 # UPDATE — PATCH /model/{id}
 # ════════════════════════════════════════════════════════════
+
 
 @allure.epic("Helpychat API")
 @allure.feature("Model 관리")
@@ -298,6 +306,7 @@ def test_update_model_unauthorized(created_model):
 # ════════════════════════════════════════════════════════════
 # DELETE — DELETE /model/{id}
 # ════════════════════════════════════════════════════════════
+
 
 @allure.epic("Helpychat API")
 @allure.feature("Model 관리")

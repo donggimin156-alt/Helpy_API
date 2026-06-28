@@ -29,8 +29,7 @@ from api.base_client import BaseClient
 from api.chatroom_api import ChatroomApi
 from api.message_api import MessageApi
 from api.model_api import ModelApi
-from config.settings import BASE_API_URL, API_TOKEN, is_production
-
+from config.settings import API_TOKEN, BASE_API_URL, is_production
 
 # ── 인증 클라이언트 fixture ────────────────────────────────────────
 #
@@ -60,6 +59,7 @@ from config.settings import BASE_API_URL, API_TOKEN, is_production
 #     2차는 yield 로 client 를 넘기고, 테스트 종료 후 세션을 닫는다.
 #     (yield 이후 = teardown = 1차의 driver.quit() 에 해당)
 
+
 @pytest.fixture(scope="session")
 def auth_client():
     """
@@ -77,9 +77,9 @@ def auth_client():
           assert response.status_code == 200
     """
     client = BaseClient(BASE_API_URL)  # HTTP 세션 생성 (1차의 driver 생성에 해당)
-    client.set_token(API_TOKEN)        # Bearer 토큰 주입 (1차의 do_login 에 해당)
-    yield client                       # 테스트에 client 를 넘김
-    client.close()                     # 세션 종료 (1차의 driver.quit() 에 해당)
+    client.set_token(API_TOKEN)  # Bearer 토큰 주입 (1차의 do_login 에 해당)
+    yield client  # 테스트에 client 를 넘김
+    client.close()  # 세션 종료 (1차의 driver.quit() 에 해당)
 
 
 # ── 리소스별 API 클라이언트 fixture (session scope) ──────────────────
@@ -92,6 +92,7 @@ def auth_client():
 # scope="session" 이유:
 #   토큰이 만료되지 않는 한 하나의 클라이언트로 세션 전체를 커버할 수 있다.
 #   (1차의 driver_module 이 모듈 단위 재사용이었다면, 2차는 세션 단위로 더 효율적)
+
 
 @pytest.fixture(scope="session")
 def model_api():
@@ -217,6 +218,7 @@ def created_chatroom(chatroom_api, created_model):
 #   1차 방어 (수동): pytest -m "not destructive" 로 실행 시 명시적 제외
 #   2차 방어 (자동): ENVIRONMENT=production 이면 코드가 자동 스킵 처리
 #   → 실수로 -m 옵션을 빼먹어도 운영 환경에선 destructive 테스트가 절대 실행 안 됨
+
 
 def pytest_collection_modifyitems(items):
     """

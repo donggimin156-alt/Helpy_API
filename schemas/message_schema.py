@@ -13,8 +13,8 @@
 
 from __future__ import annotations
 
-from typing import Optional, Literal
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -30,11 +30,11 @@ class MessageResponse(BaseModel):
     TODO: Swagger 에서 실제 필드명·타입 확인 후 수정
     """
 
-    id: str                              # TODO: 타입 확인
-    chatroom_id: str                     # TODO: 필드명 확인
+    id: str  # TODO: 타입 확인
+    chatroom_id: str  # TODO: 필드명 확인
     # TODO: role 값 확인 ("user"/"assistant" vs "human"/"ai" 등)
     role: Optional[str] = None
-    content: str                         # LLM 생성 내용 — 구조만 확인, 값은 assert 안 함
+    content: str  # LLM 생성 내용 — 구조만 확인, 값은 assert 안 함
     created_at: Optional[datetime] = None  # TODO: 존재 여부 확인
 
     class Config:

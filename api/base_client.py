@@ -20,8 +20,9 @@
 #      공통점   : "이후 요청이 인증 상태를 유지하도록 만든다"
 # ============================================================
 
+import logging  # 요청/응답 로깅용
+
 import requests  # Python 표준 HTTP 클라이언트 라이브러리
-import logging   # 요청/응답 로깅용
 
 from config.settings import CONNECT_TIMEOUT, READ_TIMEOUT  # 타임아웃 상수 재사용
 
@@ -65,10 +66,12 @@ class BaseClient:
         # 모든 요청에 기본으로 붙는 헤더 설정
         # Content-Type: application/json → 요청 본문이 JSON 형식임을 서버에 알림
         # Accept: application/json       → 서버에게 JSON 응답을 원한다고 알림
-        self.session.headers.update({
-            "Content-Type": "application/json",
-            "Accept":        "application/json",
-        })
+        self.session.headers.update(
+            {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            }
+        )
 
         # (CONNECT_TIMEOUT, READ_TIMEOUT) 튜플로 타임아웃 설정
         # 모든 _request() 호출에 자동 적용됨

@@ -14,8 +14,8 @@
 
 from __future__ import annotations
 
-from typing import Optional
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -27,7 +27,7 @@ class ModelResponse(BaseModel):
     TODO: Swagger 에서 실제 필드명·타입 확인 후 수정
     """
 
-    id: str                            # TODO: str vs int vs UUID 확인
+    id: str  # TODO: str vs int vs UUID 확인
     name: str
     instructions: Optional[str] = None  # TODO: 필드명 확인 (system_prompt 등)
     created_at: Optional[datetime] = None  # TODO: 존재 여부 확인
@@ -40,7 +40,7 @@ class ModelResponse(BaseModel):
 class ModelListItem(BaseModel):
     """GET /model 목록의 개별 항목 스키마."""
 
-    id: str   # TODO: 타입 확인
+    id: str  # TODO: 타입 확인
     name: str
 
     class Config:

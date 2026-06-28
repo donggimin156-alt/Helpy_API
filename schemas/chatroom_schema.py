@@ -9,8 +9,8 @@
 
 from __future__ import annotations
 
-from typing import Optional
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -22,9 +22,9 @@ class ChatroomResponse(BaseModel):
     TODO: Swagger 에서 실제 필드명·타입 확인 후 수정
     """
 
-    id: str                              # TODO: 타입 확인
-    model_id: str                        # TODO: 필드명 확인
-    name: Optional[str] = None           # TODO: name 필드 존재 여부 확인
+    id: str  # TODO: 타입 확인
+    model_id: str  # TODO: 필드명 확인
+    name: Optional[str] = None  # TODO: name 필드 존재 여부 확인
     created_at: Optional[datetime] = None  # TODO: 존재 여부 확인
 
     class Config:
@@ -34,7 +34,7 @@ class ChatroomResponse(BaseModel):
 class ChatroomListItem(BaseModel):
     """GET /chatroom 목록의 개별 항목 스키마."""
 
-    id: str       # TODO: 타입 확인
+    id: str  # TODO: 타입 확인
     model_id: str  # TODO: 필드명 확인
     name: Optional[str] = None
 

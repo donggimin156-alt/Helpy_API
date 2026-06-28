@@ -30,12 +30,14 @@ def _no_auth_message_api():
     """토큰을 주입하지 않은 MessageApi 인스턴스를 반환한다."""
     from api.message_api import MessageApi
     from config.settings import BASE_API_URL
+
     return MessageApi(BASE_API_URL)
 
 
 # ════════════════════════════════════════════════════════════
 # SEND — POST /chatroom/{id}/message/response
 # ════════════════════════════════════════════════════════════
+
 
 @allure.epic("Helpychat API")
 @allure.feature("Message 관리")
@@ -73,11 +75,16 @@ def test_send_message_success(message_api, created_chatroom):
 @allure.feature("Message 관리")
 @allure.story("메시지 전송 - 검증 실패")
 @pytest.mark.regression
-@pytest.mark.parametrize("payload,expected_status", [
-    ({}, 422),              # 빈 페이로드 → content 없음
-    ({"content": ""}, 422), # 빈 문자열 content  TODO: 400 vs 422 확인
-])
-def test_send_message_validation_error(message_api, created_chatroom, payload, expected_status):
+@pytest.mark.parametrize(
+    "payload,expected_status",
+    [
+        ({}, 422),  # 빈 페이로드 → content 없음
+        ({"content": ""}, 422),  # 빈 문자열 content  TODO: 400 vs 422 확인
+    ],
+)
+def test_send_message_validation_error(
+    message_api, created_chatroom, payload, expected_status
+):
     """필수 필드(content) 누락 → 422."""
     chatroom_id = created_chatroom["id"]
 
@@ -112,6 +119,7 @@ def test_send_message_unauthorized(created_chatroom):
 # ════════════════════════════════════════════════════════════
 # GET messages — GET /chatroom/{id}/message
 # ════════════════════════════════════════════════════════════
+
 
 @allure.epic("Helpychat API")
 @allure.feature("Message 관리")
