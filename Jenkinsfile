@@ -96,9 +96,13 @@ pipeline {
         // -e -o     : 테스트 완료 후 HTML 리포트 즉시 생성
         //
         // ⚠️ 이 스테이지는 기능 테스트가 완료된 뒤에만 실행된다.
-        //    성능 테스트 부하 강도는 이이측 확인 후 조정할 것.
+        //    JMeter는 output 폴더가 비어있어야 하므로 실행 전 정리한다.
         stage('성능 테스트') {
             steps {
+                bat '''
+                    if exist "%WORKSPACE%\\jmeter_report" rmdir /s /q "%WORKSPACE%\\jmeter_report"
+                    if exist "%WORKSPACE%\\performance\\result.jtl" del /q "%WORKSPACE%\\performance\\result.jtl"
+                '''
                 withCredentials([
                     string(credentialsId: 'HELPYCHAT_API_TOKEN', variable: 'API_TOKEN')
                 ]) {
