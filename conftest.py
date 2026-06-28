@@ -192,10 +192,13 @@ def created_chatroom(chatroom_api, created_model):
         f"[fixture] 챗방 생성 실패: {response.status_code} {response.text}"
     )
     chatroom = response.json()
+    # POST /chatroom 응답: {"chatroom_id": "..."} — 테스트에서 ["id"]로 통일해서 접근
+    if "chatroom_id" in chatroom and "id" not in chatroom:
+        chatroom["id"] = chatroom["chatroom_id"]
     yield chatroom
 
     # teardown
-    chatroom_id = chatroom.get("id")
+    chatroom_id = chatroom.get("id") or chatroom.get("chatroom_id")
     if chatroom_id:
         chatroom_api.delete_chatroom(chatroom_id)
 
