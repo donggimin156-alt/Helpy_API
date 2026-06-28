@@ -1,0 +1,15 @@
+# .gitattributes
+# Python 파일은 LF 고정 — Windows Jenkins → Docker(Linux) 복사 시 CRLF 혼입 방지
+*.py    text eol=lf
+*.txt   text eol=lf
+*.toml  text eol=lf
+*.md    text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+
+# Windows 실행 파일은 CRLF 유지
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+# Jenkinsfile은 LF (Jenkins가 Linux 기준 파싱)
+Jenkinsfile text eol=lf
