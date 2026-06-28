@@ -110,9 +110,9 @@ def test_full_user_scenario(model_api, chatroom_api, message_api, request):
     assert msg_resp.status_code in (200, 201), (
         f"메시지 전송 실패: {msg_resp.status_code}"
     )
-    # 원칙 9: 응답 content 값은 검증하지 않는다 — 구조(id, chatroom_id)만 확인
-    msg_body = msg_resp.json()
-    assert "id" in msg_body, "메시지 응답에 id 필드가 없음"
+    # 스펙: POST /message/responses 응답은 "string" (LLM 출력 텍스트)
+    # 원칙 9: 내용 검증 안 함 — 응답이 비어있지 않은지만 확인
+    assert msg_resp.text, "메시지 응답 본문이 비어있음"
 
     # ── 4단계: 메시지 목록 조회 ───────────────────────────────────
     with allure.step("4단계: 메시지 목록 조회"):

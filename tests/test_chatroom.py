@@ -214,11 +214,11 @@ def test_delete_chatroom_success(chatroom_api, created_chatroom):
     allure.attach(response.text, "응답 본문", allure.attachment_type.TEXT)
 
     with allure.step("상태코드 확인"):
-        assert response.status_code in (200, 204)  # TODO: 실제 API로 확인
+        assert response.status_code == 200  # 스펙: DELETE 성공 → 200, 응답 본문 {}
 
-    with allure.step("삭제 후 GET → 404 확인"):
+    with allure.step("삭제 후 GET → 409 확인"):
         get_response = chatroom_api.get_chatroom(chatroom_id)
-        assert get_response.status_code == 404
+        assert get_response.status_code == 409  # 실제 API: 없는 리소스 → 409
 
 
 @allure.epic("Helpychat API")

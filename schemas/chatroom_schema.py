@@ -2,9 +2,9 @@
 # ============================================================
 # /chatroom 엔드포인트 응답 본문 검증용 Pydantic 모델
 #
-# TODO 가이드:
-#   실제 API Swagger에서 응답 스키마를 확인한 뒤
-#   # TODO 주석이 달린 필드의 타입·이름·필수 여부를 수정한다.
+# GET /chatroom      → list[ChatroomListItem]  (단순 배열)
+# GET /chatroom/{id} → ChatroomResponse
+# POST /chatroom     → ChatroomResponse
 # ============================================================
 
 from __future__ import annotations
@@ -15,42 +15,77 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class ChatroomResponse(BaseModel):
-    """
-    POST /chatroom, GET /chatroom/{chatroom_id} 단건 응답 스키마.
+class AgentRef(BaseModel):
+    """ChatroomListItem 안에 중첩된 agent 객체."""
 
-    TODO: Swagger 에서 실제 필드명·타입 확인 후 수정
-    """
+    id: str
+    name: Optional[str] = None
+    logo_resource_id: Optional[str] = None
 
-    id: str  # TODO: 타입 확인
-    model_id: str  # TODO: 필드명 확인
-    name: Optional[str] = None  # TODO: name 필드 존재 여부 확인
-    created_at: Optional[datetime] = None  # TODO: 존재 여부 확인
+    class Config:
+        extra = "ignore"
+
+
+class ModelRef(BaseModel):
+    """ChatroomListItem 안에 중첩된 model 객체."""
+
+    id: str
+    name: Optional[str] = None
+    logo_resource_id: Optional[str] = None
+
+    class Config:
+        extra = "ignore"
+
+
+class LxpConfig(BaseModel):
+    """GET /chatroom/{id} 응답의 lxp_config 객체 (LXP 강의 연동 설정)."""
+
+    lecture_page_id: Optional[int] = None
+    lecture_page_name: Optional[str] = None
+    lecture_page_type: Optional[str] = None
+    lecture_id: Optional[int] = None
+    lecture_name: Optional[str] = None
+    course_id: Optional[int] = None
+    course_name: Optional[str] = None
 
     class Config:
         extra = "ignore"
 
 
 class ChatroomListItem(BaseModel):
-    """GET /chatroom 목록의 개별 항목 스키마."""
+    """
+    GET /chatroom 목록 응답의 개별 항목 스키마.
+
+    응답이 단순 배열([...])임을 확인 — 래퍼 객체 없음.
+    """
 
     id: str
-    model_id: Optional[str] = None  # 실제 응답에서 null 허용
+    chatroom_type: Optional[str] = None  # 예: "community"
+    agent_id: Optional[str] = None
+    model_id: Optional[str] = None
+    agent: Optional[AgentRef] = None
+    model: Optional[ModelRef] = None
     name: Optional[str] = None
+    created: Optional[datetime] = None
 
     class Config:
         extra = "ignore"
 
 
-class ChatroomListResponse(BaseModel):
+class ChatroomResponse(BaseModel):
     """
-    GET /chatroom 목록 응답 스키마.
+    POST /chatroom, GET /chatroom/{chatroom_id} 단건 응답 스키마.
 
-    TODO: 실제 응답 구조 확인 필요 (래퍼 객체 vs 단순 배열)
+    주의: 날짜 필드명은 created_at 이 아닌 created 임.
     """
 
-    items: list[ChatroomListItem]
-    total: Optional[int] = None  # TODO: total 필드 존재 여부 확인
+    id: str
+    agent_id: Optional[str] = None
+    model_id: Optional[str] = None
+    name: Optional[str] = None
+    last_message_created_at: Optional[str] = None
+    created: Optional[datetime] = None
+    lxp_config: Optional[LxpConfig] = None
 
     class Config:
         extra = "ignore"
