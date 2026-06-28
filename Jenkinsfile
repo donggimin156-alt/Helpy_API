@@ -139,8 +139,8 @@ pipeline {
                 reportName           : 'JMeter 성능 테스트 리포트'
             ])
 
-            // 워크스페이스 정리 — Workspace Cleanup 플러그인 설치 후 아래 주석 해제
-            // cleanWs()  ← Jenkins 관리 → Plugins → "Workspace Cleanup" 설치 필요
+            // 워크스페이스 정리 (리포트 발행 후 마지막에 실행)
+            cleanWs()
         }
 
         // ── success: 빌드 성공 시 Discord 알림 ───────────────
