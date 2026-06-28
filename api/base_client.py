@@ -64,12 +64,16 @@ class BaseClient:
         self.session = requests.Session()
 
         # 모든 요청에 기본으로 붙는 헤더 설정
-        # Content-Type: application/json → 요청 본문이 JSON 형식임을 서버에 알림
-        # Accept: application/json       → 서버에게 JSON 응답을 원한다고 알림
+        # Content-Type: application/json    → 요청 본문이 JSON 형식임을 서버에 알림
+        # Accept: application/json          → 서버에게 JSON 응답을 원한다고 알림
+        # x-elice-org-name-short: qaproject → ACL 체크에 필요한 조직 식별자
+        #   브라우저는 자동 전송하지만 requests 에서는 수동으로 추가해야 함
+        #   없으면 /acl/community/get/ 에서 403 → 409 응답
         self.session.headers.update(
             {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
+                "x-elice-org-name-short": "qaproject",
             }
         )
 
