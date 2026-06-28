@@ -17,7 +17,7 @@ from api.base_client import BaseClient
 from config.settings import CONNECT_TIMEOUT, LLM_READ_TIMEOUT
 
 # TODO: 실제 API로 경로 확인 필요
-_MSG_RESPONSE_PATH = "/chatroom/{chatroom_id}/message/response"
+_MSG_RESPONSE_PATH = "/chatroom/{chatroom_id}/message/responses"
 _MSG_LIST_PATH = "/chatroom/{chatroom_id}/message"
 
 

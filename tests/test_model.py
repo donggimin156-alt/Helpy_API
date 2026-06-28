@@ -51,11 +51,15 @@ def _no_auth_model_api():
 @pytest.mark.smoke
 @pytest.mark.destructive
 @pytest.mark.xfail(
-    reason="POST /model 에 key/endpoint 필수 필드 값 미확인", strict=False
+    reason="POST /model: key/endpoint 실제 값 미확인 또는 계정 권한 부족(403)",
+    strict=False,
 )
 def test_create_model_success(model_api, request):
     """
-    올바른 데이터로 POST /model → 200 또는 201 + 응답 스키마 검증.
+    올바른 데이터로 POST /model → 200 또는 201.
+
+    API 스펙: 응답 본문은 {"model_id": "..."} 만 반환.
+    에러코드: has_no_permission(403) — 계정 권한 없을 시 실패 가능.
 
     [1차 Selenium 대응]
       1차: 모델 생성 버튼 클릭 → 폼 입력 → 저장 → 목록에서 생성 확인
@@ -63,7 +67,8 @@ def test_create_model_success(model_api, request):
     """
     payload = {
         "name": f"test-model-{uuid.uuid4()}",
-        # TODO: 실제 API 로 필수/선택 필드 확인 (instructions 등)
+        "key": "test-api-key",
+        "endpoint": "https://api.openai.com/v1",
     }
 
     with allure.step("POST /model 요청"):
@@ -73,20 +78,17 @@ def test_create_model_success(model_api, request):
     allure.attach(response.text, "응답 본문", allure.attachment_type.TEXT)
 
     with allure.step("상태코드 확인"):
-        assert response.status_code in (200, 201)  # TODO: 실제 API로 확인
+        assert response.status_code in (200, 201)
 
     body = response.json()
 
-    # 생성된 리소스는 테스트 종료 후 정리 (assert 실패 시에도 실행됨)
-    created_id = body.get("id")
+    # POST /model 응답: {"model_id": "..."} — id 가 아닌 model_id
+    created_id = body.get("model_id")
     if created_id:
         request.addfinalizer(lambda: model_api.delete_model(created_id))
 
-    with allure.step("응답 스키마 검증"):
-        ModelResponse(**body)
-
-    with allure.step("name 필드 값 일치 확인"):
-        assert body.get("name") == payload["name"]
+    with allure.step("응답 구조 검증 (model_id 필드 존재 확인)"):
+        assert "model_id" in body, "POST /model 응답에 model_id 필드가 없음"
 
 
 @allure.epic("Helpychat API")

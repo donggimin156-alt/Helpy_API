@@ -50,9 +50,12 @@ def test_full_user_scenario(model_api, chatroom_api, message_api, request):
     """
 
     # ── 1단계: 모델 생성 ──────────────────────────────────────────
+    # POST /model 응답: {"model_id": "..."} — id 가 아닌 model_id
+    # 에러코드 has_no_permission(403) 발생 시 계정 권한 필요
     model_payload = {
         "name": f"e2e-model-{uuid.uuid4()}",
-        # TODO: 실제 API 로 필수 필드 확인
+        "key": "test-api-key",
+        "endpoint": "https://api.openai.com/v1",
     }
 
     with allure.step("1단계: 모델 생성"):
@@ -65,7 +68,7 @@ def test_full_user_scenario(model_api, chatroom_api, message_api, request):
         f"모델 생성 실패: {model_resp.status_code}"
     )
     model = model_resp.json()
-    model_id = model["id"]
+    model_id = model["model_id"]
 
     # 모델은 가장 마지막에 삭제 (LIFO → 먼저 등록)
     request.addfinalizer(lambda: model_api.delete_model(model_id))
