@@ -122,13 +122,6 @@ pipeline {
 
         // ── always: 성공·실패 관계없이 항상 실행 ─────────────
         always {
-            // 기능 테스트 Allure 리포트 발행
-            allure([
-                includeProperties: false,
-                reportBuildPolicy: 'ALWAYS',  // 실패해도 리포트 발행
-                results          : [[path: 'allure-results']]
-            ])
-
             // 성능 테스트 JMeter HTML 리포트 발행
             publishHTML([
                 allowMissing         : true,   // jmeter_report 없어도 오류 미발생
