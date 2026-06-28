@@ -42,10 +42,14 @@ class ModelApi(BaseClient):
         return self.post(_PATH, json=payload)
 
     def list_models(self):
-        """GET /model — 모델 목록 조회."""
+        """GET /model — 활성화된 모델 목록 조회."""
         return self.get(
             _PATH, params={"filter_is_active": "true", "skip": 0, "count": 40}
         )
+
+    def list_all_models(self):
+        """GET /model — 활성/비활성 포함 전체 모델 목록 조회."""
+        return self.get(_PATH, params={"skip": 0, "count": 100})
 
     def get_model(self, model_id: str):
         """GET /model/{model_id} — 모델 단건 조회."""

@@ -28,6 +28,7 @@ import pytest
 from api.base_client import BaseClient
 from api.chatroom_api import ChatroomApi
 from api.message_api import MessageApi
+from api.model_activation_api import ModelActivationApi
 from api.model_api import ModelApi
 from config.settings import API_TOKEN, BASE_API_URL, is_production
 
@@ -116,6 +117,15 @@ def chatroom_api():
 def message_api():
     """MessageApi 인스턴스 — 세션 전체에서 재사용."""
     client = MessageApi(BASE_API_URL)
+    client.set_token(API_TOKEN)
+    yield client
+    client.close()
+
+
+@pytest.fixture(scope="session")
+def model_activation_api():
+    """ModelActivationApi 인스턴스 — 세션 전체에서 재사용."""
+    client = ModelActivationApi(BASE_API_URL)
     client.set_token(API_TOKEN)
     yield client
     client.close()
