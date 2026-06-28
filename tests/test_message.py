@@ -53,7 +53,7 @@ def test_send_message_success(message_api, created_chatroom):
     """
     chatroom_id = created_chatroom["id"]
     payload = {
-        "content": "안녕하세요",  # TODO: 실제 API로 필드명 확인
+        "input": "안녕하세요",  # TODO: 실제 API로 필드명 확인
     }
 
     with allure.step(f"POST /chatroom/{chatroom_id}/message/response 요청 (LLM 호출)"):
@@ -80,7 +80,7 @@ def test_send_message_success(message_api, created_chatroom):
     "payload,expected_status",
     [
         ({}, 422),  # 빈 페이로드 → content 없음
-        ({"content": ""}, 422),  # 빈 문자열 content  TODO: 400 vs 422 확인
+        ({"input": ""}, 422),  # 빈 문자열 content  TODO: 400 vs 422 확인
     ],
 )
 def test_send_message_validation_error(
@@ -109,7 +109,7 @@ def test_send_message_unauthorized(created_chatroom):
     chatroom_id = created_chatroom["id"]
 
     with allure.step("인증 없이 메시지 전송 요청"):
-        response = no_auth.send_message(chatroom_id, {"content": "test"})
+        response = no_auth.send_message(chatroom_id, {"input": "test"})
 
     no_auth.close()
 
