@@ -53,17 +53,19 @@ def test_send_message_success(message_api, created_chatroom):
     """
     chatroom_id = created_chatroom["id"]
     payload = {
-        "input": [{"role": "user", "content": "안녕하세요"}],
+        "input": ["안녕하세요"],
     }
 
-    with allure.step(f"POST /chatroom/{chatroom_id}/message/response 요청 (LLM 호출)"):
+    with allure.step(f"POST /chatroom/{chatroom_id}/message/responses 요청 (LLM 호출)"):
         response = message_api.send_message(chatroom_id, payload)
 
     allure.attach(str(payload), "요청 본문", allure.attachment_type.TEXT)
     allure.attach(response.text, "응답 본문", allure.attachment_type.TEXT)
 
     with allure.step("상태코드 확인"):
-        assert response.status_code in (200, 201)
+        assert response.status_code in (200, 201), (
+            f"메시지 전송 실패: {response.status_code} | {response.text}"
+        )
 
     with allure.step("응답 본문 확인 (스펙: 응답은 string — LLM 출력 텍스트)"):
         # POST /message/responses 응답은 JSON 객체가 아닌 문자열
