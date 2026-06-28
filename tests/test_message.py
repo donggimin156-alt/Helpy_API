@@ -53,7 +53,7 @@ def test_send_message_success(message_api, created_chatroom):
     """
     chatroom_id = created_chatroom["id"]
     payload = {
-        "input": "안녕하세요",  # TODO: 실제 API로 필드명 확인
+        "input": [{"role": "user", "content": "안녕하세요"}],
     }
 
     with allure.step(f"POST /chatroom/{chatroom_id}/message/response 요청 (LLM 호출)"):
