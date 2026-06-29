@@ -24,6 +24,7 @@ import uuid
 import allure
 import pytest
 
+from api.base_client import BaseClient
 from schemas.model_schema import ModelListItem, ModelResponse
 
 # ── 헬퍼: 인증 없는 클라이언트 생성 ────────────────────────────────
@@ -80,7 +81,7 @@ def test_create_model_success(model_api, request):
     with allure.step("상태코드 확인"):
         assert response.status_code in (200, 201)
 
-    body = response.json()
+    body = BaseClient.safe_json(response)
 
     # POST /model 응답: {"model_id": "..."} — id 가 아닌 model_id
     created_id = body.get("model_id")
@@ -158,7 +159,7 @@ def test_list_models_success(model_api):
         assert response.status_code == 200
 
     with allure.step("응답 스키마 검증"):
-        body = response.json()
+        body = BaseClient.safe_json(response)
         [ModelListItem(**item) for item in body]
 
 
@@ -203,7 +204,7 @@ def test_get_model_success(model_api, created_model):
         assert response.status_code == 200
 
     with allure.step("응답 스키마 + id 검증"):
-        body = response.json()
+        body = BaseClient.safe_json(response)
         validated = ModelResponse(**body)
         assert validated.id == model_id
 
@@ -272,7 +273,7 @@ def test_update_model_success(model_api, created_model):
     with allure.step("GET으로 수정된 name 재확인"):
         get_resp = model_api.get_model(model_id)
         assert get_resp.status_code == 200
-        assert get_resp.json().get("name") == new_name
+        assert BaseClient.safe_json(get_resp).get("name") == new_name
 
 
 @allure.epic("Helpychat API")

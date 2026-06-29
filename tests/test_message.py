@@ -23,6 +23,7 @@
 import allure
 import pytest
 
+from api.base_client import BaseClient
 from schemas.message_schema import MessageListItem
 
 
@@ -154,7 +155,6 @@ def test_get_messages_success(message_api, created_chatroom):
         assert response.status_code == 200
 
     with allure.step("응답 스키마 검증 (내용은 검증하지 않음)"):
-        body = response.json()
-        # GET /message 응답이 배열이면 각 항목 스키마 검증, 아니면 통과
+        body = BaseClient.safe_json(response)
         if isinstance(body, list):
             [MessageListItem(**item) for item in body]

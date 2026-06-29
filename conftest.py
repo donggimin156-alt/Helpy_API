@@ -161,7 +161,7 @@ def created_model(model_api):
     assert response.status_code == 200, (
         f"[fixture] 모델 목록 조회 실패: {response.status_code}"
     )
-    models = response.json()
+    models = BaseClient.safe_json(response)
     assert len(models) > 0, "[fixture] 사용 가능한 모델이 없습니다"
     return models[0]
 
@@ -191,7 +191,7 @@ def created_chatroom(chatroom_api, created_model):
     assert response.status_code in (200, 201), (
         f"[fixture] 챗방 생성 실패: {response.status_code} {response.text}"
     )
-    chatroom = response.json()
+    chatroom = BaseClient.safe_json(response)
     # POST /chatroom 응답: {"chatroom_id": "..."} — 테스트에서 ["id"]로 통일해서 접근
     if "chatroom_id" in chatroom and "id" not in chatroom:
         chatroom["id"] = chatroom["chatroom_id"]

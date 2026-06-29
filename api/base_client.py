@@ -121,6 +121,21 @@ class BaseClient:
 
     # ── 내부 공통 요청 메서드 ──────────────────────────────────────
 
+    @staticmethod
+    def safe_json(response: "requests.Response") -> dict | list:
+        """
+        Content-Type 확인 후 JSON 파싱. HTML이 오면 명확한 메시지로 실패.
+        토큰 만료·리다이렉트 시 HTMLDecodeError 대신 읽을 수 있는 에러를 남긴다.
+        """
+        content_type = response.headers.get("Content-Type", "")
+        if "text/html" in content_type:
+            raise ValueError(
+                f"JSON 아닌 HTML 응답 수신 (status={response.status_code})\n"
+                f"원인: 토큰 만료 또는 잘못된 URL일 가능성 높음\n"
+                f"응답 앞부분: {response.text[:200]}"
+            )
+        return response.json()
+
     def _request(self, method: str, path: str, **kwargs) -> requests.Response:
         """
         모든 HTTP 요청의 단일 진입점.

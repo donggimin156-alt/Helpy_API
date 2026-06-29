@@ -22,6 +22,7 @@ import uuid
 import allure
 import pytest
 
+from api.base_client import BaseClient
 from schemas.chatroom_schema import ChatroomListItem, ChatroomResponse
 
 
@@ -64,7 +65,7 @@ def test_create_chatroom_success(chatroom_api, created_model, request):
     with allure.step("상태코드 확인"):
         assert response.status_code in (200, 201)  # TODO: 실제 API로 확인
 
-    body = response.json()
+    body = BaseClient.safe_json(response)
 
     # POST /chatroom 응답: {"chatroom_id": "..."} — id 필드가 chatroom_id
     created_id = body.get("chatroom_id") or body.get("id")
@@ -138,7 +139,7 @@ def test_list_chatrooms_success(chatroom_api):
         assert response.status_code == 200
 
     with allure.step("응답 스키마 검증"):
-        body = response.json()
+        body = BaseClient.safe_json(response)
         [ChatroomListItem(**item) for item in body]
 
 
@@ -165,7 +166,7 @@ def test_get_chatroom_success(chatroom_api, created_chatroom):
         assert response.status_code == 200
 
     with allure.step("응답 스키마 + id 검증"):
-        body = response.json()
+        body = BaseClient.safe_json(response)
         validated = ChatroomResponse(**body)
         assert validated.id == chatroom_id
 
