@@ -204,3 +204,42 @@ Checkout → Install → Code Quality → 기능 테스트 → 성능 테스트
 
 시크릿(토큰, Discord URL)은 Jenkins Credentials → `withCredentials` → OS 환경변수로 주입.
 `.env` 는 gitignore 처리, CI 에 절대 올라가지 않는다.
+
+---
+
+## 트러블슈팅 / 알려진 제약
+
+### ✅ 해결됨: Allure·JMeter 리포트가 Jenkins에서 렌더링 안 됨 (CSP)
+
+**현상:** Jenkins HTML Publisher가 발행한 Allure·JMeter 리포트를 열면 차트가 비어있거나 JS 오류 발생.
+
+**원인:** Jenkins 기본 Content Security Policy(CSP)가 인라인 스크립트와 외부 리소스를 차단.
+
+**해결:** Jenkins 시작 시 CSP를 해제하는 Groovy 초기화 스크립트 적용.
+
+```groovy
+// $JENKINS_HOME/init.groovy.d/csp.groovy
+System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
+```
+
+Jenkins 재시작마다 자동 적용된다. (임시 해결인 Script Console 방식과 달리 영구 적용)
+
+---
+
+### ⚠️ 인지된 제약: Allure Overview의 Behaviors 위젯 미표시
+
+**현상:** Allure 리포트 Overview 및 Behaviors 탭에서 `500 / Unexpected token '<', "<!DOCTYPE"... is not valid JSON` 표시.
+
+**원인:**
+
+- allure-pytest가 raw 결과(result.json)에 `epic` / `feature` / `story` 레이블을 정상 생성함 ✓
+- Allure CLI 2.40.0이 새 포맷(`widgets/` 디렉토리)으로 리포트를 생성함
+- Jenkins Allure 플러그인이 `behaviors.json`을 구 포맷(`data/` 디렉토리) 기준으로 요청 → 302(파일 없음) → HTML 반환 → JSON 파싱 오류
+
+**테스트 결과에 미치는 영향:** 없음. 35 passed 정상 확인, TREND·SUITES·Categories 위젯 모두 정상 작동.
+
+**의도적으로 유지하는 이유:**
+
+Jenkins Allure 플러그인을 구버전으로 다운그레이드하면 현재 정상 작동하는 TREND·SUITES·History 기능이 깨질 수 있다. 이 위젯 하나를 살리기 위한 플러그인 교체는 회귀 위험 대비 효과가 낮다고 판단.
+
+**향후 해결 방안:** Jenkins Allure 플러그인이 Allure 3.x 포맷과 호환되는 버전으로 업데이트되면 자동 해결 예상.
